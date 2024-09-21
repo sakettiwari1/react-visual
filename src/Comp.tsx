@@ -1,51 +1,45 @@
 import * as React from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-
-
-
-const data = [
-  { name: 'Student A', percentage: 92 },
-  { name: 'Student B', percentage: 78 },
-  { name: 'Student C', percentage: 63 },
-  { name: 'Student D', percentage: 87 },
-  { name: 'Student E', percentage: 54 },
-  { name: 'Student F', percentage: 29 },
-  { name: 'Student G', percentage: 96 },
-  { name: 'Student H', percentage: 85 },
-  { name: 'Student I', percentage: 77 },
-  { name: 'Student J', percentage: 42 },
-  { name: 'Student K', percentage: 65 },
-  { name: 'Student L', percentage: 91 },
-  { name: 'Student M', percentage: 73 },
-  { name: 'Student N', percentage: 59 },
-  { name: 'Student O', percentage: 48 },
-  { name: 'Student P', percentage: 80 },
-  { name: 'Student Q', percentage: 99 },
-  { name: 'Student R', percentage: 60 },
-  { name: 'Student S', percentage: 88 },
-  { name: 'Student T', percentage: 46 },
-  { name: 'Student U', percentage: 69 },
-  { name: 'Student AH', percentage: 66 }
-];
+import powerbi from "powerbi-visuals-api";
+import DataView = powerbi.DataView;
+import DataViewSingle = powerbi.DataViewSingle;
 
 export interface State {
     color: string;
     startRange: number;
     endRange: number;
-    filteredData: typeof data;
+    filteredData: any[]; // Use any[] to store dynamic data
 }
 
 export const initialState: State = {
-    color: "#8884d8",  // Default color
-    startRange: 0,     // Default start range
-    endRange: 100,     // Default end range
-    filteredData: data // Initial filtered data
+    color: "#8884d8",
+    startRange: 0,
+    endRange: 100,
+    filteredData: []
 };
 
 export class ReactCircleCard extends React.Component<{}, State> {
     constructor(props: any) {
         super(props);
         this.state = initialState;
+    }
+
+    public static update(newState: State) {
+        if (typeof ReactCircleCard.updateCallback === 'function') {
+            ReactCircleCard.updateCallback(newState);
+        }
+    }
+
+    public updateData(dataView: DataView) {
+        const categories = dataView.categorical.categories[0].values; // Get student names
+        const measures = dataView.categorical.values[0].values; // Get percentages
+
+        const filteredData = categories.map((name: string, index: number) => ({
+            name,
+            percentage: measures[index]
+        }));
+
+        this.setState({ filteredData });
     }
 
     render() {
@@ -57,7 +51,6 @@ export class ReactCircleCard extends React.Component<{}, State> {
                     Student Percentage Marks
                 </h1>
 
-                {/* Input fields for color, range, and button */}
                 <div className="absolute top-0 right-0 m-4 p-4 border border-gray-200 shadow-lg bg-white">
                     <label>
                         Select Color:
@@ -98,7 +91,6 @@ export class ReactCircleCard extends React.Component<{}, State> {
                     </button>
                 </div>
 
-                {/* Bar Chart */}
                 <ResponsiveContainer width="100%" height={600}>
                     <BarChart
                         layout="vertical"
@@ -117,12 +109,11 @@ export class ReactCircleCard extends React.Component<{}, State> {
         );
     }
 
-    // Function to apply the filter
     private applyFilter = () => {
         const { color, startRange, endRange } = this.state;
-        const filtered = data.map((student) => {
+        const filtered = this.state.filteredData.map((student) => {
             if (student.percentage >= startRange && student.percentage <= endRange) {
-                return { ...student, fill: color };  // Apply chosen color
+                return { ...student, fill: color }; // Apply chosen color
             }
             return student;
         });
@@ -130,14 +121,6 @@ export class ReactCircleCard extends React.Component<{}, State> {
     };
 
     private static updateCallback: (data: object) => void = null;
-
-    public static update(newState: State) {
-        if (typeof ReactCircleCard.updateCallback === 'function') {
-            ReactCircleCard.updateCallback(newState);
-        }
-    }
-
-    public state: State = initialState;
 
     public componentWillMount() {
         ReactCircleCard.updateCallback = (newState: State): void => {

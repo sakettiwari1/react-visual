@@ -1,22 +1,20 @@
 import * as React from "react";
-declare const data: {
-    name: string;
-    percentage: number;
-}[];
+import powerbi from "powerbi-visuals-api";
+import DataView = powerbi.DataView;
 export interface State {
     color: string;
     startRange: number;
     endRange: number;
-    filteredData: typeof data;
+    filteredData: any[];
 }
 export declare const initialState: State;
 export declare class ReactCircleCard extends React.Component<{}, State> {
     constructor(props: any);
+    static update(newState: State): void;
+    updateData(dataView: DataView): void;
     render(): React.JSX.Element;
     private applyFilter;
     private static updateCallback;
-    static update(newState: State): void;
-    state: State;
     componentWillMount(): void;
     componentWillUnmount(): void;
 }
