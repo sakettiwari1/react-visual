@@ -34,11 +34,13 @@ class ReactCircleCard extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
         this.applyFilter = () => {
             const { color, startRange, endRange } = this.state;
             const filtered = this.state.filteredData.map((student) => {
+                // Check if the student's percentage falls within the specified range
                 if (student.percentage >= startRange && student.percentage <= endRange) {
-                    return Object.assign(Object.assign({}, student), { fill: color });
+                    return Object.assign(Object.assign({}, student), { fill: color }); // Inside range, use selected color
                 }
-                return Object.assign(Object.assign({}, student), { fill: '#d3d3d3' });
+                return Object.assign(Object.assign({}, student), { fill: '#d3d3d3' }); // Outside range, use gray
             });
+            console.log('Filtered Data:', filtered); // Log the filtered data for debugging
             this.setState({ filteredData: filtered });
         };
         this.state = initialState;
@@ -59,11 +61,10 @@ class ReactCircleCard extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
     }
     render() {
         const { color, startRange, endRange, filteredData } = this.state;
-        // Calculate the width based on the number of bars
         const barWidth = Math.max(50, Math.min(100, 1000 / filteredData.length));
-        return (react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { className: "relative h-screen flex flex-col justify-center items-center" },
+        return (react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { className: "relative h-screen flex flex-col items-center" },
             react__WEBPACK_IMPORTED_MODULE_0__.createElement("h1", { className: "absolute top-0 text-center w-full font-bold text-4xl" }, "Student Percentage Marks"),
-            react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { className: "absolute top-0 right-0 m-4 p-4 border border-gray-200 shadow-lg bg-white" },
+            react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { className: "absolute top-0 right-0 m-4 p-4 border border-gray-200 shadow-lg bg-white", style: { right: '20px', top: '20px' } },
                 react__WEBPACK_IMPORTED_MODULE_0__.createElement("label", null,
                     "Select Color:",
                     react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", { type: "color", value: color, onChange: (e) => this.setState({ color: e.target.value }), style: { marginLeft: '10px' } })),
@@ -77,7 +78,8 @@ class ReactCircleCard extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
                     react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", { type: "number", value: endRange, onChange: (e) => this.setState({ endRange: Number(e.target.value) }), style: { marginLeft: '10px', width: '50px' } })),
                 react__WEBPACK_IMPORTED_MODULE_0__.createElement("br", null),
                 react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", { className: 'bg-sky-500 rounded-md text-white', onClick: this.applyFilter, style: { marginTop: '10px', padding: '5px 10px' } }, "Apply Filter")),
-            react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { style: { width: '100%', height: '600px' } },
+            react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { style: { width: '70%', height: '400px', marginTop: '80px' } },
+                " ",
                 react__WEBPACK_IMPORTED_MODULE_0__.createElement(recharts__WEBPACK_IMPORTED_MODULE_1__/* .ResponsiveContainer */ .u, null,
                     react__WEBPACK_IMPORTED_MODULE_0__.createElement(recharts__WEBPACK_IMPORTED_MODULE_2__/* .BarChart */ .E, { layout: "vertical", data: filteredData, margin: { top: 20, right: 30, left: 20, bottom: 5 } },
                         react__WEBPACK_IMPORTED_MODULE_0__.createElement(recharts__WEBPACK_IMPORTED_MODULE_3__/* .CartesianGrid */ .d, { strokeDasharray: "3 3" }),

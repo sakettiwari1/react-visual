@@ -40,20 +40,19 @@ export class ReactCircleCard extends React.Component<{}, State> {
 
         this.setState({ filteredData });
     }
+    
 
     render() {
         const { color, startRange, endRange, filteredData } = this.state;
-
-        // Calculate the width based on the number of bars
         const barWidth = Math.max(50, Math.min(100, 1000 / filteredData.length));
 
         return (
-            <div className="relative h-screen flex flex-col justify-center items-center">
+            <div className="relative h-screen flex flex-col items-center">
                 <h1 className="absolute top-0 text-center w-full font-bold text-4xl">
                     Student Percentage Marks
                 </h1>
 
-                <div className="absolute top-0 right-0 m-4 p-4 border border-gray-200 shadow-lg bg-white">
+                <div className="absolute top-0 right-0 m-4 p-4 border border-gray-200 shadow-lg bg-white" style={{ right: '20px', top: '20px' }}>
                     <label>
                         Select Color:
                         <input
@@ -93,7 +92,7 @@ export class ReactCircleCard extends React.Component<{}, State> {
                     </button>
                 </div>
 
-                <div style={{ width: '100%', height: '600px' }}>
+                <div style={{ width: '70%', height: '400px', marginTop: '80px' }}> {/* Added marginTop for spacing */}
                     <ResponsiveContainer>
                         <BarChart
                             layout="vertical"
@@ -115,12 +114,16 @@ export class ReactCircleCard extends React.Component<{}, State> {
 
     private applyFilter = () => {
         const { color, startRange, endRange } = this.state;
+    
         const filtered = this.state.filteredData.map((student) => {
+            // Check if the student's percentage falls within the specified range
             if (student.percentage >= startRange && student.percentage <= endRange) {
-                return { ...student, fill: color };
+                return { ...student, fill: color }; // Inside range, use selected color
             }
-            return { ...student, fill: '#d3d3d3' };
+            return { ...student, fill: '#d3d3d3' }; // Outside range, use gray
         });
+    
+        console.log('Filtered Data:', filtered); // Log the filtered data for debugging
         this.setState({ filteredData: filtered });
     };
 
