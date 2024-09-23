@@ -1,18 +1,18 @@
 {
   "dataRoles": [
     {
-      "displayName": "Student Name", 
-      "name": "category", 
+      "displayName": "Student Name",
+      "name": "category",
       "kind": "Grouping"
     },
     {
-      "displayName": "Percentage", 
-      "name": "measure", 
+      "displayName": "Percentage",
+      "name": "measure",
       "kind": "Measure"
     },
     {
-      "displayName": "Tooltips", 
-      "name": "Tooltips", 
+      "displayName": "Tooltips",
+      "name": "Tooltips",
       "kind": "Measure"
     }
   ],
@@ -20,27 +20,18 @@
     {
       "conditions": [
         {
-          "category": {
-            "max": 1
-          },
-          "measure": {
-            "max": 1
-          }
+          "category": { "max": 100 },
+          "measure": { "max": 100 }
         }
       ],
       "categorical": {
         "categories": {
-          "for": {
-            "in": "category"
-          }
+          "for": { "in": "category" }
         },
         "values": {
           "select": [
-            {
-              "bind": {
-                "to": "measure"
-              }
-            }
+            { "bind": { "to": "measure" } },
+            { "bind": { "to": "Tooltips" } }
           ]
         }
       }
@@ -50,160 +41,41 @@
     "general": {
       "properties": {
         "formatString": {
-          "type": {
-            "formatting": {
-              "formatString": true
-            }
-          }
+          "type": { "formatting": { "formatString": true } }
         }
       }
     },
-    "enableAxis": {
+    "filterOptions": {
+      "displayName": "Filter Options",
       "properties": {
-        "show": {
-          "type": {
-            "bool": true
-          }
+        "startRange": {
+          "displayName": "Start Range",
+          "type": { "numeric": true }
         },
-        "fill": {
-          "type": {
-            "fill": {
-              "solid": {
-                "color": true
-              }
-            }
-          }
+        "endRange": {
+          "displayName": "End Range",
+          "type": { "numeric": true }
+        },
+        "colorSelector": {
+          "displayName": "Bar Color",
+          "type": { "fill": { "solid": { "color": true } } }
         }
       }
     },
     "directEdit": {
       "properties": {
-        "show": {
-          "type": {
-            "bool": true
-          }
-        },
-        "textProperty": {
-          "type": {
-            "text": true
-          }
-        },
-        "fontFamily": {
-          "type": {
-            "formatting": {
-              "fontFamily": true
-            }
-          }
-        },
-        "fontSize": {
-          "type": {
-            "formatting": {
-              "fontSize": true
-            }
-          }
-        },
-        "bold": {
-          "type": {
-            "bool": true
-          }
-        },
-        "italic": {
-          "type": {
-            "bool": true
-          }
-        },
-        "underline": {
-          "type": {
-            "bool": true
-          }
-        },
+        "show": { "type": { "bool": true } },
+        "textProperty": { "type": { "text": true } },
+        "fontFamily": { "type": { "formatting": { "fontFamily": true } } },
+        "fontSize": { "type": { "formatting": { "fontSize": true } } },
+        "bold": { "type": { "bool": true } },
+        "italic": { "type": { "bool": true } },
+        "underline": { "type": { "bool": true } },
         "fontColor": {
-          "type": {
-            "fill": {
-              "solid": {
-                "color": true
-              }
-            }
-          }
+          "type": { "fill": { "solid": { "color": true } } }
         },
         "background": {
-          "type": {
-            "fill": {
-              "solid": {
-                "color": true
-              }
-            }
-          }
-        },
-        "position": {
-          "type": {
-            "enumeration": [
-              {
-                "value": "Left",
-                "displayName": "Left"
-              },
-              {
-                "value": "Right",
-                "displayName": "Right"
-              }
-            ]
-          }
-        }
-      }
-    },
-    "colorSelector": {
-      "properties": {
-        "fill": {
-          "type": {
-            "fill": {
-              "solid": {
-                "color": true
-              }
-            }
-          }
-        }
-      }
-    },
-    "generalView": {
-      "properties": {
-        "opacity": {
-          "type": {
-            "integer": true
-          }
-        },
-        "showHelpLink": {
-          "type": {
-            "bool": true
-          }
-        }
-      }
-    },
-    "averageLine": {
-      "objectCategory": 2,
-      "properties": {
-        "show": {
-          "type": {
-            "bool": true
-          }
-        },
-        "displayName": {
-          "type": {
-            "text": true
-          }
-        },
-        "fill": {
-          "type": {
-            "fill": {
-              "solid": {
-                "color": true
-              }
-            }
-          }
-        },
-        "showDataLabel": {
-          "type": {
-            "bool": true
-          }
+          "type": { "fill": { "solid": { "color": true } } }
         }
       }
     }
@@ -213,16 +85,12 @@
       "default": true,
       "canvas": true
     },
-    "roles": [
-      "Tooltips"
-    ],
+    "roles": ["Tooltips"],
     "supportEnhancedTooltips": true
   },
   "supportsLandingPage": false,
   "drilldown": {
-    "roles": [
-      "category"
-    ]
+    "roles": ["category"]
   },
   "privileges": []
 }

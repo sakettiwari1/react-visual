@@ -64,14 +64,18 @@ export class ReactCircleCard extends React.Component<{}, State> {
                     </label>
                     <br />
                     <label style={{ marginTop: '10px' }}>
-                        Start Range:
-                        <input
-                            type="number"
-                            value={startRange}
-                            onChange={(e) => this.setState({ startRange: Number(e.target.value) })}
-                            style={{ marginLeft: '10px', width: '50px' }}
-                        />
-                    </label>
+    Start Range:
+    <input
+        type="number"
+        value={startRange}
+        onChange={(e) => {
+            const newValue = Number(e.target.value);
+            this.setState({ startRange: newValue >= 0 ? newValue : 0 });
+        }}
+        style={{ marginLeft: '10px', width: '50px' }}
+    />
+</label>
+
                     <br />
                     <label style={{ marginTop: '10px' }}>
                         End Range:

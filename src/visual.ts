@@ -26,26 +26,40 @@ export class Visual implements IVisual {
             const categories = dataView.categorical.categories[0].values; // X-axis values (student names)
             const values = dataView.categorical.values[0].values; // Y-axis values (percentages)
 
+            // Extract user-defined properties for filtering
+            const filterOptions = dataView.metadata.objects?.["filterOptions"] || {};
+            
+            // Ensure these are numbers and provide default values
+            const startRange = Number(filterOptions.startRange || 0);
+            const endRange = Number(filterOptions.endRange || 100);
+            
+            // Check for color selector and access the color properly
+            let color = "#8884d8"; // Default color
+            if (filterOptions.colorSelector) {
+                const fill = filterOptions.colorSelector as any; // Type assertion
+                if (fill && fill.solid && fill.solid.color) {
+                    color = fill.solid.color;
+                }
+            }
+
             // Map the extracted data to the format expected by ReactCircleCard
-            const filteredData = categories.map((category: any, index: number) => {
-                return {
-                    name: category,       // Student name
-                    percentage: values[index] // Student percentage
-                };
-            });
+            const filteredData = categories.map((category: any, index: number) => ({
+                name: category,       // Student name
+                percentage: values[index] // Student percentage
+            }));
 
             // Pass the updated state to ReactCircleCard
             ReactCircleCard.update({
-                color: "#8884d8", // Default color or retrieve from data if needed
-                startRange: 0,    // Default start range or retrieve from data if needed
-                endRange: 100,    // Default end range or retrieve from data if needed
-                filteredData: filteredData // Pass the transformed data
+                color,               // User-defined color
+                startRange,          // User-defined start range
+                endRange,            // User-defined end range
+                filteredData         // Pass the transformed data
             });
         } else {
             this.clear();
         }
     }
-
+    
     private clear() {
         ReactCircleCard.update(initialState);
     }

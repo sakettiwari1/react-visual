@@ -71,7 +71,10 @@ class ReactCircleCard extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
                 react__WEBPACK_IMPORTED_MODULE_0__.createElement("br", null),
                 react__WEBPACK_IMPORTED_MODULE_0__.createElement("label", { style: { marginTop: '10px' } },
                     "Start Range:",
-                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", { type: "number", value: startRange, onChange: (e) => this.setState({ startRange: Number(e.target.value) }), style: { marginLeft: '10px', width: '50px' } })),
+                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", { type: "number", value: startRange, onChange: (e) => {
+                            const newValue = Number(e.target.value);
+                            this.setState({ startRange: newValue >= 0 ? newValue : 0 });
+                        }, style: { marginLeft: '10px', width: '50px' } })),
                 react__WEBPACK_IMPORTED_MODULE_0__.createElement("br", null),
                 react__WEBPACK_IMPORTED_MODULE_0__.createElement("label", { style: { marginTop: '10px' } },
                     "End Range:",
@@ -125,24 +128,36 @@ class Visual {
         this.renderReactComponent(_Comp__WEBPACK_IMPORTED_MODULE_2__/* .initialState */ .ue);
     }
     update(options) {
+        var _a;
         if (options.dataViews && options.dataViews[0]) {
             const dataView = options.dataViews[0];
             // Extract categories and values from the dataView
             const categories = dataView.categorical.categories[0].values; // X-axis values (student names)
             const values = dataView.categorical.values[0].values; // Y-axis values (percentages)
+            // Extract user-defined properties for filtering
+            const filterOptions = ((_a = dataView.metadata.objects) === null || _a === void 0 ? void 0 : _a["filterOptions"]) || {};
+            // Ensure these are numbers and provide default values
+            const startRange = Number(filterOptions.startRange || 0);
+            const endRange = Number(filterOptions.endRange || 100);
+            // Check for color selector and access the color properly
+            let color = "#8884d8"; // Default color
+            if (filterOptions.colorSelector) {
+                const fill = filterOptions.colorSelector; // Type assertion
+                if (fill && fill.solid && fill.solid.color) {
+                    color = fill.solid.color;
+                }
+            }
             // Map the extracted data to the format expected by ReactCircleCard
-            const filteredData = categories.map((category, index) => {
-                return {
-                    name: category,
-                    percentage: values[index] // Student percentage
-                };
-            });
+            const filteredData = categories.map((category, index) => ({
+                name: category,
+                percentage: values[index] // Student percentage
+            }));
             // Pass the updated state to ReactCircleCard
             _Comp__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Ay.update({
-                color: "#8884d8",
-                startRange: 0,
-                endRange: 100,
-                filteredData: filteredData // Pass the transformed data
+                color,
+                startRange,
+                endRange,
+                filteredData // Pass the transformed data
             });
         }
         else {
