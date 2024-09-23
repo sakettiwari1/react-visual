@@ -2,13 +2,12 @@ import * as React from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import powerbi from "powerbi-visuals-api";
 import DataView = powerbi.DataView;
-import DataViewSingle = powerbi.DataViewSingle;
 
 export interface State {
     color: string;
     startRange: number;
     endRange: number;
-    filteredData: any[]; // Use any[] to store dynamic data
+    filteredData: any[];
 }
 
 export const initialState: State = {
@@ -31,8 +30,8 @@ export class ReactCircleCard extends React.Component<{}, State> {
     }
 
     public updateData(dataView: DataView) {
-        const categories = dataView.categorical.categories[0].values; // Get student names
-        const measures = dataView.categorical.values[0].values; // Get percentages
+        const categories = dataView.categorical.categories[0].values;
+        const measures = dataView.categorical.values[0].values;
 
         const filteredData = categories.map((name: string, index: number) => ({
             name,
@@ -45,8 +44,11 @@ export class ReactCircleCard extends React.Component<{}, State> {
     render() {
         const { color, startRange, endRange, filteredData } = this.state;
 
+        // Calculate the width based on the number of bars
+        const barWidth = Math.max(50, Math.min(100, 1000 / filteredData.length));
+
         return (
-            <div className="relative h-screen flex justify-center items-center">
+            <div className="relative h-screen flex flex-col justify-center items-center">
                 <h1 className="absolute top-0 text-center w-full font-bold text-4xl">
                     Student Percentage Marks
                 </h1>
@@ -91,20 +93,22 @@ export class ReactCircleCard extends React.Component<{}, State> {
                     </button>
                 </div>
 
-                <ResponsiveContainer width="100%" height={600}>
-                    <BarChart
-                        layout="vertical"
-                        data={filteredData}
-                        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                    >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis type="number" />
-                        <YAxis dataKey="name" type="category" />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="percentage" fill={color} />
-                    </BarChart>
-                </ResponsiveContainer>
+                <div style={{ width: '100%', height: '600px' }}>
+                    <ResponsiveContainer>
+                        <BarChart
+                            layout="vertical"
+                            data={filteredData}
+                            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis type="number" />
+                            <YAxis dataKey="name" type="category" />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="percentage" fill={color} barSize={barWidth} />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
             </div>
         );
     }
@@ -113,9 +117,9 @@ export class ReactCircleCard extends React.Component<{}, State> {
         const { color, startRange, endRange } = this.state;
         const filtered = this.state.filteredData.map((student) => {
             if (student.percentage >= startRange && student.percentage <= endRange) {
-                return { ...student, fill: color }; // Apply chosen color
+                return { ...student, fill: color };
             }
-            return student;
+            return { ...student, fill: '#d3d3d3' };
         });
         this.setState({ filteredData: filtered });
     };
